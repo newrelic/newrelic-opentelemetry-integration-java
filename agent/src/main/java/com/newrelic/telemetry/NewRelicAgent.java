@@ -1,11 +1,11 @@
-package com.newrelic.opentelemetry;
+package com.newrelic.telemetry;
 
 
 import io.opentelemetry.javaagent.OpenTelemetryAgent;
 
 import java.lang.instrument.Instrumentation;
 
-import static com.newrelic.opentelemetry.DefaultConfig.setDefaultConfig;
+import static com.newrelic.telemetry.DefaultConfig.setDefaultConfig;
 
 public class NewRelicAgent {
     public static void premain(final String agentArgs, final Instrumentation inst) {

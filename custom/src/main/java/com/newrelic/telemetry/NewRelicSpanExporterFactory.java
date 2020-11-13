@@ -1,4 +1,4 @@
-package com.newrelic.opentelemetry;
+package com.newrelic.telemetry;
 
 import com.google.auto.service.AutoService;
 import io.opentelemetry.javaagent.spi.exporter.SpanExporterFactory;

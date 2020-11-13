@@ -1,4 +1,4 @@
-group 'com.newrelic.opentelemetry'
+group 'com.newrelic.telemetry'
 version '1.0-SNAPSHOT'
 
 subprojects {

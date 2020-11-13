@@ -1,4 +1,4 @@
-package com.newrelic.opentelemetry;
+package com.newrelic.telemetry;
 
 import io.opentelemetry.sdk.common.CompletableResultCode;
 import io.opentelemetry.sdk.trace.data.SpanData;

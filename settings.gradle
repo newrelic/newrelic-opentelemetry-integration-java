@@ -1,4 +1,3 @@
 rootProject.name = 'newrelic-opentelemetry-integration-java'
 
 include "custom", "agent", "smoke-tests"
-
