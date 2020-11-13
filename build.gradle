@@ -1,4 +1,4 @@
-group 'io.opentelemetry.example'
+group 'com.newrelic.opentelemetry'
 version '1.0-SNAPSHOT'
 
 subprojects {

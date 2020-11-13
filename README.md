@@ -10,6 +10,7 @@
 
 
 ## Building
+Requires JDK 11
 
 `./gradlew assemble`
 

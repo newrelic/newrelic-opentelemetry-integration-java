@@ -1,4 +1,4 @@
-package io.opentelemetry.demo;
+package com.newrelic.opentelemetry;
 
 import java.io.File;
 import java.io.FileReader;

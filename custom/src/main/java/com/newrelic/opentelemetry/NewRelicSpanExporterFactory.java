@@ -1,28 +1,26 @@
-/*
- * Copyright The OpenTelemetry Authors
- * SPDX-License-Identifier: Apache-2.0
- */
-
-package io.opentelemetry.demo;
+package com.newrelic.opentelemetry;
 
 import com.google.auto.service.AutoService;
 import io.opentelemetry.javaagent.spi.exporter.SpanExporterFactory;
 import io.opentelemetry.sdk.trace.export.SpanExporter;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
+// TODO import and use implementations from opentelemetry-exporters-newrelic-all artifact instead
+
 @AutoService(SpanExporterFactory.class)
-public class DemoSpanExporterFactory implements SpanExporterFactory {
+public class NewRelicSpanExporterFactory implements SpanExporterFactory {
 
     @Override
     public SpanExporter fromConfig(Properties config) {
-        return new DemoSpanExporter();
+        return new NewRelicSpanExporter();
     }
 
     @Override
     public Set<String> getNames() {
-        return new HashSet<>(Arrays.asList("demo"));
+        return new HashSet<>(Arrays.asList("newrelic"));
     }
 }

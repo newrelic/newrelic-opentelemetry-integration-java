@@ -1,19 +1,19 @@
-package io.opentelemetry.demo;
+package com.newrelic.opentelemetry;
 
 
 import io.opentelemetry.javaagent.OpenTelemetryAgent;
 
 import java.lang.instrument.Instrumentation;
 
-import static io.opentelemetry.demo.DefaultConfig.setDefaultConfig;
+import static com.newrelic.opentelemetry.DefaultConfig.setDefaultConfig;
 
-public class DemoAgent {
+public class NewRelicAgent {
     public static void premain(final String agentArgs, final Instrumentation inst) {
         agentmain(agentArgs, inst);
     }
 
     public static void agentmain(final String agentArgs, final Instrumentation inst) {
-        setDefaultConfig("otel.exporter", "demo");
+        setDefaultConfig("otel.exporter", "newrelic");
         OpenTelemetryAgent.agentmain(agentArgs, inst);
     }
 }
