@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
+// TODO we may be able to simplify this for our needs, if not we should add proper attribution to Splunk:
+//  https://github.com/signalfx/splunk-otel-java/blob/main/agent/src/main/java/com/splunk/opentelemetry/DefaultConfig.java
+
 final class DefaultConfig {
     private static final Pattern ENV_REPLACEMENT = Pattern.compile("[^a-zA-Z0-9_]");
     private static final String CONFIGURATION_FILE_PROPERTY = "otel.trace.config";
