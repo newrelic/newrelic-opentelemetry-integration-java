@@ -21,8 +21,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.util.JsonFormat;
 import io.opentelemetry.proto.collector.trace.v1.ExportTraceServiceRequest;
-import io.opentelemetry.proto.common.v1.AnyValue;
-import io.opentelemetry.proto.common.v1.KeyValue;
 import io.opentelemetry.proto.trace.v1.Span;
 import java.io.IOException;
 import java.util.Collection;
@@ -59,9 +57,7 @@ abstract class SmokeTest {
 
   protected abstract String getTargetImage(int jdk);
 
-  /**
-   * Subclasses can override this method to customise target application's environment
-   */
+  /** Subclasses can override this method to customise target application's environment */
   protected Map<String, String> getExtraEnv() {
     return Collections.emptyMap();
   }
@@ -73,7 +69,7 @@ abstract class SmokeTest {
   static void setupSpec() {
     backend =
         new GenericContainer<>(
-            "open-telemetry-docker-dev.bintray.io/java/smoke-fake-backend:latest")
+                "open-telemetry-docker-dev.bintray.io/java/smoke-fake-backend:latest")
             .withExposedPorts(8080)
             .waitingFor(Wait.forHttp("/health").forPort(8080))
             .withNetwork(network)
@@ -103,11 +99,12 @@ abstract class SmokeTest {
             .withLogConsumer(new Slf4jLogConsumer(logger))
             .withCopyFileToContainer(
                 MountableFile.forHostPath(agentPath), "/opentelemetry-javaagent.jar")
-//            .withEnv("JAVA_TOOL_OPTIONS", "-javaagent:/opentelemetry-javaagent.jar -Dio.opentelemetry.javaagent.slf4j.simpleLogger.defaultLogLevel=debug")
+            //            .withEnv("JAVA_TOOL_OPTIONS", "-javaagent:/opentelemetry-javaagent.jar
+            // -Dio.opentelemetry.javaagent.slf4j.simpleLogger.defaultLogLevel=debug")
             .withEnv("JAVA_TOOL_OPTIONS", "-javaagent:/opentelemetry-javaagent.jar")
             .withEnv("OTEL_BSP_MAX_EXPORT_BATCH", "1")
             .withEnv("OTEL_BSP_SCHEDULE_DELAY", "10")
-            .withEnv("OTEL_INTEGRATION_GEODE_ENABLED","false")
+            .withEnv("OTEL_INTEGRATION_GEODE_ENABLED", "false")
             .withEnv(getExtraEnv());
     target.start();
   }
@@ -135,12 +132,17 @@ abstract class SmokeTest {
     collector.stop();
   }
 
-  protected static int countResourcesByValue(Collection<ExportTraceServiceRequest> traces, String resourceName, String value) {
-    return (int) traces.stream()
-        .flatMap(it -> it.getResourceSpansList().stream())
-        .flatMap(it -> it.getResource().getAttributesList().stream())
-        .filter(kv -> kv.getKey().equals(resourceName) && kv.getValue().getStringValue().equals(value))
-        .count();
+  protected static int countResourcesByValue(
+      Collection<ExportTraceServiceRequest> traces, String resourceName, String value) {
+    return (int)
+        traces.stream()
+            .flatMap(it -> it.getResourceSpansList().stream())
+            .flatMap(it -> it.getResource().getAttributesList().stream())
+            .filter(
+                kv ->
+                    kv.getKey().equals(resourceName)
+                        && kv.getValue().getStringValue().equals(value))
+            .count();
   }
 
   protected static int countSpansByName(
@@ -150,10 +152,14 @@ abstract class SmokeTest {
 
   protected static int countSpansByAttributeValue(
       Collection<ExportTraceServiceRequest> traces, String attributeName, String attributeValue) {
-    return (int) getSpanStream(traces)
-        .flatMap(it -> it.getAttributesList().stream())
-        .filter(kv -> kv.getKey().equals(attributeName) && kv.getValue().getStringValue().equals(attributeValue))
-        .count();
+    return (int)
+        getSpanStream(traces)
+            .flatMap(it -> it.getAttributesList().stream())
+            .filter(
+                kv ->
+                    kv.getKey().equals(attributeName)
+                        && kv.getValue().getStringValue().equals(attributeValue))
+            .count();
   }
 
   protected static Stream<Span> getSpanStream(Collection<ExportTraceServiceRequest> traces) {
