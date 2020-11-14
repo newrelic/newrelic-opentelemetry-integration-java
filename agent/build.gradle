@@ -33,7 +33,7 @@ tasks {
       attributes.put("Premain-Class", "com.newrelic.telemetry.NewRelicAgent")
       attributes.put("Can-Redefine-Classes", "true")
       attributes.put("Can-Retransform-Classes", "true")
-      attributes.put("Implementation-Vendor", "New Relic")
+      attributes.put("Implementation-Vendor", "New Relic, Inc.")
       attributes.put("Implementation-Version", "newrelic-opentelemetry-integration-${project.version}-otel-${versions.opentelemetryJavaagent}")
     }
   }
