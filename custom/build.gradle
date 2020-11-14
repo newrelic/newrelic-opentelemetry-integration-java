@@ -8,8 +8,8 @@ dependencies {
     implementation("io.opentelemetry:opentelemetry-sdk:${versions.opentelemetry}")
     implementation("io.opentelemetry.javaagent:opentelemetry-javaagent-spi:${versions.opentelemetryJavaagentSpi}")
     implementation("io.opentelemetry.javaagent:opentelemetry-javaagent-tooling:${versions.opentelemetryJavaagent}")
-//    implementation("com.newrelic.telemetry:opentelemetry-exporters-newrelic:0.9.0") // TODO update to 0.10.n artifact once published
-//    implementation("com.newrelic.telemetry:opentelemetry-exporters-newrelic-auto:0.9.0") // TODO update to 0.10.n artifact once published
+//    implementation("com.newrelic.telemetry:opentelemetry-exporters-newrelic:0.10.0")
+//    implementation("com.newrelic.telemetry:opentelemetry-exporters-newrelic-auto:0.10.0")
 
     implementation deps.bytebuddy
     implementation deps.bytebuddyagent
