@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
-// TODO import and use implementations from opentelemetry-exporters-newrelic-all artifact instead
+// TODO use implementations from opentelemetry-exporters-newrelic-all artifact instead
 
 @AutoService(SpanExporterFactory.class)
 public class NewRelicSpanExporterFactory implements SpanExporterFactory {

@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
+// TODO use implementations from opentelemetry-exporters-newrelic-all artifact instead
+
 public class NewRelicMetricExporterFactory implements MetricExporterFactory {
     @Override
     public MetricExporter fromConfig(Properties config) {

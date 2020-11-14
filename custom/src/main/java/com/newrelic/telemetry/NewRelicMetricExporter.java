@@ -6,6 +6,8 @@ import io.opentelemetry.sdk.metrics.export.MetricExporter;
 
 import java.util.Collection;
 
+// TODO use implementations from opentelemetry-exporters-newrelic artifact instead
+
 public class NewRelicMetricExporter implements MetricExporter {
     @Override
     public CompletableResultCode export(Collection<MetricData> metrics) {

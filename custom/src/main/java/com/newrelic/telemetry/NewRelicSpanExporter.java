@@ -6,7 +6,7 @@ import io.opentelemetry.sdk.trace.export.SpanExporter;
 
 import java.util.Collection;
 
-// TODO import and use implementations from opentelemetry-exporters-newrelic artifact instead
+// TODO use implementations from opentelemetry-exporters-newrelic artifact instead
 
 public class NewRelicSpanExporter implements SpanExporter {
     @Override
