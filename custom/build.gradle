@@ -1,14 +1,15 @@
 plugins {
     id "java"
     id("com.github.johnrengelman.shadow") version "6.0.0"
+    id("com.github.sherter.google-java-format") version "0.9"
 }
 
 dependencies {
     implementation("io.opentelemetry:opentelemetry-sdk:${versions.opentelemetry}")
     implementation("io.opentelemetry.javaagent:opentelemetry-javaagent-spi:${versions.opentelemetryJavaagentSpi}")
     implementation("io.opentelemetry.javaagent:opentelemetry-javaagent-tooling:${versions.opentelemetryJavaagent}")
-    implementation("com.newrelic.telemetry:opentelemetry-exporters-newrelic:0.10.1")
-    implementation("com.newrelic.telemetry:opentelemetry-exporters-newrelic-auto:0.10.1")
+    implementation("com.newrelic.telemetry:opentelemetry-exporters-newrelic:0.9.0") // TODO update to 0.10.n artifact once published
+    implementation("com.newrelic.telemetry:opentelemetry-exporters-newrelic-auto:0.9.0") // TODO update to 0.10.n artifact once published
 
     implementation deps.bytebuddy
     implementation deps.bytebuddyagent
