@@ -8,9 +8,9 @@ dependencies {
     implementation("io.opentelemetry:opentelemetry-sdk:${versions.opentelemetry}")
     implementation("io.opentelemetry.javaagent:opentelemetry-javaagent-spi:${versions.opentelemetryJavaagentSpi}")
     implementation("io.opentelemetry.javaagent:opentelemetry-javaagent-tooling:${versions.opentelemetryJavaagent}")
-    // TODO figure out why these break the build with a ClassCastException
-//    implementation("com.newrelic.telemetry:opentelemetry-exporters-newrelic:0.10.0")
-//    implementation("com.newrelic.telemetry:opentelemetry-exporters-newrelic-auto:0.10.0")
+    // Pull in the New Relic OpenTelemetry exports artifacts so that they can get shadowed into the agent jar
+    implementation("com.newrelic.telemetry:opentelemetry-exporters-newrelic:0.10.0")
+    implementation("com.newrelic.telemetry:opentelemetry-exporters-newrelic-auto:0.10.0")
 
     implementation deps.bytebuddy
     implementation deps.bytebuddyagent
