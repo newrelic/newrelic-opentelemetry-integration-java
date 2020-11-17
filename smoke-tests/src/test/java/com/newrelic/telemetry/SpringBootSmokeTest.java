@@ -35,6 +35,8 @@ class SpringBootSmokeTest extends SmokeTest {
 
     Collection<ExportTraceServiceRequest> traces = waitForTraces();
 
+    // TODO get these tests working or rip them out
+    //  I think they'll fail unless a valid newrelic.api.key is configured
     Assertions.assertNotNull(response.header("X-server-id"));
     Assertions.assertEquals(1, response.headers("X-server-id").size());
     Assertions.assertTrue(TraceId.isValid(response.header("X-server-id")));
