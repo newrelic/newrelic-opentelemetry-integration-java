@@ -17,7 +17,7 @@ dependencies {
 tasks.test {
   useJUnitPlatform()
 
-  def shadowTask = project(":agent").tasks.shadowJar
+  def shadowTask = project(":newrelic-opentelemetry-javaagent").tasks.shadowJar
   inputs.files(layout.files(shadowTask))
 
   doFirst {

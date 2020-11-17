@@ -10,7 +10,7 @@ default to send telemetry data to the New Relic platform.
 The New Relic OpenTelemetry Integration is a standard javaagent. To use it pass the `-javaagent` flag to your application's JVM:
 
 ```
--javaagent:/path/to/agent.jar
+-javaagent:/path/to/newrelic-opentelemetry-javaagent-all.jar
 ```
 
 Configure the underlying [New Relic OpenTelemetry exporter](https://github.com/newrelic/opentelemetry-exporter-java#configuration) to specify where to send your data.
