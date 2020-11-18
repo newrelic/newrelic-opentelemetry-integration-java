@@ -16,13 +16,14 @@ The New Relic OpenTelemetry Integration is a standard javaagent. To use it pass 
 Configure the underlying [New Relic OpenTelemetry exporter](https://github.com/newrelic/opentelemetry-exporter-java#configuration) to specify where to send your data.
 
 ## Building
+
 Requires: JDK 11+
 
 `./gradlew assemble`
 
 ## Testing
 
->[**Optional** - Include instructions on how to run tests if we include tests with the codebase. Remove this section if it's not needed.]
+`smoke-tests` contains simple tests to verify that resulting agent builds and applies correctly
 
 ## Support
 
@@ -43,6 +44,7 @@ We encourage contributions to improve the New Relic OpenTelemetry Integration (J
 If you have any questions, or to execute our corporate CLA, required if your contribution is on behalf of a company,  please drop us an email at opensource@newrelic.com.
 
 ## License
+
 The New Relic OpenTelemetry Integration (Java Agent) is licensed under the [Apache 2.0](http://apache.org/licenses/LICENSE-2.0.txt) License.
 
 The New Relic OpenTelemetry Integration (Java Agent) also uses source code from third-party libraries. You can find full details on which libraries are used and the terms under which they are licensed in the third-party notices document.
