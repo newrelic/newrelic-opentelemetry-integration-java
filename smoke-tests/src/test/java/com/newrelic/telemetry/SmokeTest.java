@@ -53,7 +53,9 @@ abstract class SmokeTest {
   @BeforeAll
   static void setupSpec() {
     backend =
-        new GenericContainer<>(DockerImageName.parse("open-telemetry-docker-dev.bintray.io/java/smoke-fake-backend:latest"))
+        new GenericContainer<>(
+                DockerImageName.parse(
+                    "open-telemetry-docker-dev.bintray.io/java/smoke-fake-backend:latest"))
             .withExposedPorts(8080)
             .waitingFor(Wait.forHttp("/health").forPort(8080))
             .withNetwork(network)
@@ -83,7 +85,12 @@ abstract class SmokeTest {
             .withLogConsumer(new Slf4jLogConsumer(logger))
             .withCopyFileToContainer(
                 MountableFile.forHostPath(agentPath), "/newrelic-opentelemetry-javaagent.jar")
-            .withEnv("JAVA_TOOL_OPTIONS", "-javaagent:/newrelic-opentelemetry-javaagent.jar -Dnewrelic.api.key=123fake -Dnewrelic.enable.audit.logging=true -Dio.opentelemetry.javaagent.slf4j.simpleLogger.log.com.newrelic.telemetry=debug")
+            .withEnv(
+                "JAVA_TOOL_OPTIONS",
+                "-javaagent:/newrelic-opentelemetry-javaagent.jar "
+                    + "-Dnewrelic.api.key=123fake "
+                    + "-Dnewrelic.enable.audit.logging=true "
+                    + "-Dio.opentelemetry.javaagent.slf4j.simpleLogger.log.com.newrelic.telemetry=debug")
             .withEnv("OTEL_BSP_MAX_EXPORT_BATCH", "1")
             .withEnv("OTEL_BSP_SCHEDULE_DELAY", "10")
             .withEnv("OTEL_INTEGRATION_GEODE_ENABLED", "false")

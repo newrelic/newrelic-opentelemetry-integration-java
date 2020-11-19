@@ -35,7 +35,7 @@ class SpringBootSmokeTest extends SmokeTest {
 
     Collection<ExportTraceServiceRequest> traces = waitForTraces();
 
-    // TODO get this test working or rip it out
+    // TODO get this test working or rip it out, most of these assertions fail
     Assertions.assertNotNull(response.header("X-server-id"));
     Assertions.assertEquals(1, response.headers("X-server-id").size());
     Assertions.assertTrue(TraceId.isValid(response.header("X-server-id")));
