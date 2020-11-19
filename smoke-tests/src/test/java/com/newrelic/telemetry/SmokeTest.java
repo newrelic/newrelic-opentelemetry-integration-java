@@ -26,6 +26,7 @@ import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.utility.DockerImageName;
 import org.testcontainers.utility.MountableFile;
 
 abstract class SmokeTest {
@@ -52,8 +53,7 @@ abstract class SmokeTest {
   @BeforeAll
   static void setupSpec() {
     backend =
-        new GenericContainer<>(
-                "open-telemetry-docker-dev.bintray.io/java/smoke-fake-backend:latest")
+        new GenericContainer<>(DockerImageName.parse("open-telemetry-docker-dev.bintray.io/java/smoke-fake-backend:latest"))
             .withExposedPorts(8080)
             .waitingFor(Wait.forHttp("/health").forPort(8080))
             .withNetwork(network)
@@ -62,7 +62,7 @@ abstract class SmokeTest {
     backend.start();
 
     collector =
-        new GenericContainer<>("otel/opentelemetry-collector-dev:latest")
+        new GenericContainer<>(DockerImageName.parse("otel/opentelemetry-collector-dev:latest"))
             .dependsOn(backend)
             .withNetwork(network)
             .withNetworkAliases("collector")
@@ -77,15 +77,13 @@ abstract class SmokeTest {
 
   void startTarget(int jdk) {
     target =
-        new GenericContainer<>(getTargetImage(jdk))
+        new GenericContainer<>(DockerImageName.parse(getTargetImage(jdk)))
             .withExposedPorts(8080)
             .withNetwork(network)
             .withLogConsumer(new Slf4jLogConsumer(logger))
             .withCopyFileToContainer(
-                MountableFile.forHostPath(agentPath), "/opentelemetry-javaagent.jar")
-            //            .withEnv("JAVA_TOOL_OPTIONS", "-javaagent:/opentelemetry-javaagent.jar
-            // -Dio.opentelemetry.javaagent.slf4j.simpleLogger.defaultLogLevel=debug")
-            .withEnv("JAVA_TOOL_OPTIONS", "-javaagent:/opentelemetry-javaagent.jar")
+                MountableFile.forHostPath(agentPath), "/newrelic-opentelemetry-javaagent.jar")
+            .withEnv("JAVA_TOOL_OPTIONS", "-javaagent:/newrelic-opentelemetry-javaagent.jar -Dnewrelic.api.key=123fake -Dnewrelic.enable.audit.logging=true -Dio.opentelemetry.javaagent.slf4j.simpleLogger.log.com.newrelic.telemetry=debug")
             .withEnv("OTEL_BSP_MAX_EXPORT_BATCH", "1")
             .withEnv("OTEL_BSP_SCHEDULE_DELAY", "10")
             .withEnv("OTEL_INTEGRATION_GEODE_ENABLED", "false")
@@ -162,7 +160,7 @@ abstract class SmokeTest {
             it -> {
               ExportTraceServiceRequest.Builder builder = ExportTraceServiceRequest.newBuilder();
               // TODO(anuraaga): Register parser into object mapper to avoid de -> re ->
-              // deserialize.
+              //   deserialize.
               try {
                 JsonFormat.parser().merge(OBJECT_MAPPER.writeValueAsString(it), builder);
               } catch (InvalidProtocolBufferException | JsonProcessingException e) {
