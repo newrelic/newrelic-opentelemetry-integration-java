@@ -6,6 +6,7 @@ plugins {
 configurations {
   customShadow
 }
+
 dependencies {
   customShadow project(path: ":custom", configuration: "shadow")
   implementation "io.opentelemetry.javaagent:opentelemetry-javaagent:${versions.opentelemetryJavaagent}:all"
