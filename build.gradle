@@ -5,6 +5,7 @@ subprojects {
     version = rootProject.version
 
     apply plugin: "java"
+    apply plugin: "checkstyle"
 
     ext {
         versions = [
@@ -22,6 +23,13 @@ subprojects {
             url = uri("https://oss.jfrog.org/artifactory/oss-snapshot-local")
         }
         mavenCentral()
+    }
+
+    checkstyle {
+        configFile = rootProject.file('checkstyle.xml') as File
+        configProperties = [
+            'licenseHeader': rootProject.file('license_header.txt')
+        ]
     }
 
     dependencies {
