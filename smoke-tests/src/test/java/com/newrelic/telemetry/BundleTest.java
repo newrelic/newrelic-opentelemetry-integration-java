@@ -1,44 +1,43 @@
 package com.newrelic.telemetry;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
 public class BundleTest {
 
     static Bundle bundle;
-    static MockEdge mockEdge;
 
     @BeforeAll
     public static void before() {
         bundle = new Bundle();
         bundle.start();
 
-        mockEdge = new MockEdge();
-        mockEdge.start();
     }
 
     @AfterAll
     public static void after() {
         bundle.stop();
-        mockEdge.stop();
     }
 
     @Test
     public void testMetricsAndSpans() throws Exception {
-        Thread.sleep(10000);
-        ArrayNode metrics = mockEdge.getMetrics();
-        assertEquals(12, metrics.size());
+        String url = String.format("http://localhost:%d/greeting", bundle.target.getMappedPort(8080));
+        Request request = new Request.Builder().url(url).get().build();
 
-        ArrayNode spans = mockEdge.getSpans();
-        assertEquals(12, spans.size());
+        Response response = OkHttpUtils.client().newCall(request).execute();
+        assertEquals(200, response.code());
+        assertEquals("Hi!", response.body().string());
+        ArrayNode metrics = bundle.backend.getMetrics();
+        assertEquals(1, metrics.size());
+
+        ArrayNode spans = bundle.backend.getSpans();
+        assertEquals(2, spans.size());
     }
 }
