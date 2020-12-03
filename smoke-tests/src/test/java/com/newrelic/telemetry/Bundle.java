@@ -5,29 +5,32 @@ import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
-import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.DockerImageName;
 import org.testcontainers.utility.MountableFile;
 
+/**
+ * This class pulls down a docker image of a open telemetry smoke test app and runs it with the bundle attached
+ */
 public class Bundle {
 
     public static final Network network = Network.newNetwork();
     protected GenericContainer target;
-    protected MockEdge backend ;
+    protected MockEdge backend;
     private static final Logger logger = LoggerFactory.getLogger(Bundle.class);
     protected static final String agentPath =
             System.getProperty("io.opentelemetry.smoketest.agent.shadowJar.path");
+    private static final String DOCKER_IMAGE_NAME = "open-telemetry-docker-dev.bintray.io/java/smoke-springboot-jdk11:latest";
 
     public void start() {
         backend = new MockEdge(network);
         String args = "-javaagent:/newrelic-opentelemetry-javaagent.jar "
                                         + "-Dnewrelic.api.key=123fake "
                                         + "-Dnewrelic.enable.audit.logging=true "
-                                        + "-Dnewrelic.trace.uri.override=http://backend:8080/trace/put "
-                                        + "-Dnewrelic.metric.uri.override=http://backend:8080/metric/put "
+                                        + String.format("-Dnewrelic.trace.uri.override=http://%s:8080/trace/add ", MockEdge.NETWORK_ALIAS)
+                                        + String.format("-Dnewrelic.metric.uri.override=http://%s:8080/metric/add ", MockEdge.NETWORK_ALIAS)
                                         + "-Dio.opentelemetry.javaagent.slf4j.simpleLogger.log.com.newrelic.telemetry=debug ";
 
-        target = new GenericContainer<>(DockerImageName.parse(getTargetImage(11)))
+        target = new GenericContainer<>(DockerImageName.parse(DOCKER_IMAGE_NAME))
                         .dependsOn(backend)
                         .withExposedPorts(8080)
                         .withNetwork(network)
@@ -45,9 +48,5 @@ public class Bundle {
     public void stop() {
         target.stop();
         backend.stop();
-    }
-
-    private String getTargetImage(int jdk) {
-        return "open-telemetry-docker-dev.bintray.io/java/smoke-springboot-jdk" + jdk + ":latest";
     }
 }
