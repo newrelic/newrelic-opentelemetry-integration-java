@@ -41,7 +41,7 @@ tasks {
       attributes.put("Can-Redefine-Classes", "true")
       attributes.put("Can-Retransform-Classes", "true")
       attributes.put("Implementation-Vendor", "New Relic, Inc.")
-      attributes.put("Implementation-Version", "newrelic-opentelemetry-integration-${project.version}-otel-${versions.opentelemetryJavaagent}")
+      attributes.put("Implementation-Version", "newrelic-opentelemetry-javaagent-${project.version}-otel-${versions.opentelemetryJavaagent}")
     }
   }
   assemble {
@@ -54,7 +54,6 @@ publishing {
     shadow(MavenPublication) { publication ->
       project.shadow.component(publication)
       pom {
-        System.out.println project.group
         groupId = project.group
         name = project.name
         description = 'A bundle of the OpenTelemetry Java Agent and the New Relic Exporter'
