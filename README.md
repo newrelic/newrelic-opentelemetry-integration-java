@@ -7,13 +7,47 @@ default to send telemetry data to the New Relic platform.
 
 ## Installing and using New Relic OpenTelemetry Integration
 
-The New Relic OpenTelemetry Integration is a standard javaagent. To use it pass the `-javaagent` flag to your application's JVM:
+The New Relic OpenTelemetry Integration is a standard javaagent. To use it, you just need the `-javaagent` startup flag and the following system properties. 
 
 ```
 -javaagent:/path/to/newrelic-opentelemetry-javaagent-all.jar
+-Dnewrelic.api.key=<Insights Insert Key>
+-Dnewrelic.service.name=fun_service
 ```
 
-Configure the underlying [New Relic OpenTelemetry exporter](https://github.com/newrelic/opentelemetry-exporter-java#configuration) to specify where to send your data.
+Here is an example to override the endpoints where metric and span are sent and to increase logging.
+
+```
+-javaagent:/path/to/newrelic-opentelemetry-javaagent-all.jar
+-Dnewrelic.api.key=<Insights Insert Key>
+-Dnewrelic.service.name=fun_service
+-Dio.opentelemetry.javaagent.slf4j.simpleLogger.log.com.newrelic.telemetry=debug
+-Dnewrelic.enable.audit.logging=true
+-Dnewrelic.trace.uri.override=https://staging-trace-api.newrelic.com/trace/v1
+-Dnewrelic.metric.uri.override=https://staging-metric-api.newrelic.com/metric/v1
+```
+
+Here is the list and description of all configurable properties for the [New Relic OpenTelemetry exporter](https://github.com/newrelic/opentelemetry-exporter-java#configuration-system-properties).
+
+## Find and use your data
+
+Go to [one.newrelic.com](https://one.newrelic.com), search for your service name, and :star2: 
+
+If you don't see your service, try running with debug and audit logging to confirm telemetry batches are being successfully sent. Here is an example of what you might see. 
+
+```
+[Thread-6] DEBUG com.newrelic.telemetry.spans.SpanBatchSender - Sending a span batch (number of spans: 4) to the New Relic span ingest endpoint)
+[Thread-6] DEBUG com.newrelic.telemetry.spans.json.SpanBatchMarshaller - Generating json for span batch.
+[Thread-6] DEBUG com.newrelic.telemetry.transport.BatchDataSender - Response from New Relic ingest API: code: 202, body: {"requestId":"28fa2622-0001-b000-0000-01761fc2a899"}
+[Thread-6] DEBUG com.newrelic.telemetry.TelemetryClient - Telemetry batch sent
+```
+
+For tips on how to find and query your data in New Relic, see 
+[Find trace/span data](https://docs.newrelic.com/docs/understand-dependencies/distributed-tracing/trace-api/introduction-trace-api#view-data). 
+
+For general querying information, see:
+- [Query New Relic data](https://docs.newrelic.com/docs/using-new-relic/data/understand-data/query-new-relic-data)
+- [Intro to NRQL](https://docs.newrelic.com/docs/query-data/nrql-new-relic-query-language/getting-started/introduction-nrql)
 
 ## Building
 
