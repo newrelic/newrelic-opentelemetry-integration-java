@@ -59,7 +59,7 @@ public class BundleTest {
       Span span = objectMapper.convertValue(iterator.next(), Span.class);
       spanNames.add(span.attributes.name);
     }
-    assertTrue("no spans were reported", spans != null && !spans.isEmpty());
+    assertTrue("no spans were reported", !spans.isEmpty());
     assertTrue(spanNames.contains("WebController.withSpan"));
     assertTrue(spanNames.contains("WebController.greeting"));
     assertTrue(spanNames.contains("/greeting"));
