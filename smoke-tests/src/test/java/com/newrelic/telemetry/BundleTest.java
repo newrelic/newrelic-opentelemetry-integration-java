@@ -7,7 +7,13 @@ package com.newrelic.telemetry;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.newrelic.telemetry.model.Span;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.junit.jupiter.api.AfterAll;
@@ -39,8 +45,22 @@ public class BundleTest {
     assertEquals("Hi!", response.body().string());
     ArrayNode metrics = bundle.backend.getMetrics();
     assertTrue("no metrics were reported", metrics != null && !metrics.isEmpty());
+    JsonNode metric = metrics.get(0);
+
+    String name = metric.get("name").asText();
+    Double count = metric.get("value").asDouble();
+    assertEquals("processedSpans", name);
 
     ArrayNode spans = bundle.backend.getSpans();
-    assertTrue("no spans were reported", spans != null && !spans.isEmpty());
+    Set<String> spanNames = new HashSet<String>();
+    Iterator<JsonNode> iterator = spans.iterator();
+    ObjectMapper objectMapper = new ObjectMapper();
+    while (iterator.hasNext()) {
+      Span span = objectMapper.convertValue(iterator.next(), Span.class);
+      spanNames.add(span.attributes.name);
+    }
+    assertTrue("no spans were reported", !spans.isEmpty());
+    assertTrue(spanNames.contains("WebController.greeting"));
+    assertTrue(spanNames.contains("/greeting"));
   }
 }
