@@ -1,4 +1,6 @@
 plugins {
+  id("maven-publish")
+  id("signing")
   id("com.github.johnrengelman.shadow") version "6.0.0"
   id("com.github.sherter.google-java-format") version "0.9"
 }
@@ -23,6 +25,10 @@ tasks {
     }
   }
 
+  jar {
+    enabled = false
+  }
+
   shadowJar {
     mergeServiceFiles {
       include("inst/META-INF/services/*")
@@ -35,11 +41,61 @@ tasks {
       attributes.put("Can-Redefine-Classes", "true")
       attributes.put("Can-Retransform-Classes", "true")
       attributes.put("Implementation-Vendor", "New Relic, Inc.")
-      attributes.put("Implementation-Version", "newrelic-opentelemetry-integration-${project.version}-otel-${versions.opentelemetryJavaagent}")
+      attributes.put("Implementation-Version", "newrelic-opentelemetry-javaagent-${project.version}-otel-${versions.opentelemetryJavaagent}")
     }
   }
-
   assemble {
     dependsOn(shadowJar)
   }
+}
+
+publishing {
+  publications {
+    shadow(MavenPublication) { publication ->
+      project.shadow.component(publication)
+      pom {
+        groupId = project.group
+        name = project.name
+        description = 'A bundle of the OpenTelemetry Java Agent and the New Relic Exporter'
+        url = 'https://github.com/newrelic/newrelic-opentelemetry-integration-java'
+        licenses {
+          license {
+            name = 'The Apache License, Version 2.0'
+            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+            distribution = 'repo'
+          }
+        }
+        developers {
+          developer {
+            id = 'newrelic'
+            name = 'New Relic'
+            email = 'opensource@newrelic.com'
+          }
+        }
+        scm {
+          connection = 'scm:git@github.com:newrelic/newrelic-opentelemetry-integration-java.git'
+          url = 'git@github.com:newrelic/newrelic-opentelemetry-integration-java.git'
+        }
+      }
+    }
+  }
+  repositories {
+    maven {
+      def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+      def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+      url = project.version.endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
+
+      credentials {
+        username = System.getenv("SONATYPE_USERNAME")
+        password = System.getenv("SONATYPE_PASSWORD")
+      }
+    }
+  }
+}
+
+signing {
+  def signingKey = findProperty("signingKey")
+  def signingPassword = findProperty("signingPassword")
+  useInMemoryPgpKeys(signingKey, signingPassword)
+  sign publishing.publications.shadow
 }
