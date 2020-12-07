@@ -60,7 +60,6 @@ public class BundleTest {
       spanNames.add(span.attributes.name);
     }
     assertTrue("no spans were reported", !spans.isEmpty());
-    assertTrue(spanNames.contains("WebController.withSpan"));
     assertTrue(spanNames.contains("WebController.greeting"));
     assertTrue(spanNames.contains("/greeting"));
   }
