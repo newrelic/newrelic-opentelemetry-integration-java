@@ -30,7 +30,7 @@ public class MockEdge extends GenericContainer {
   protected static OkHttpClient client = OkHttpUtils.client();
   private static final Logger logger = LoggerFactory.getLogger(MockEdge.class);
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-  private static final String IMAGE_NAME = "mock-edge:1.0.0";
+  private static final String IMAGE_NAME = "newrelic/mock-edge:1.0.0";
   private final Network network;
   private static GenericContainer mockEdge;
   static final String NETWORK_ALIAS = "backend";
