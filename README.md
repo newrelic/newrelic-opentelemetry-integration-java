@@ -72,6 +72,29 @@ To run the smoke tests run the following command:
 
 `./gradlew test`
 
+## Example
+
+To see the New Relic OpenTelemetry Integration in action we will be using the Spring Pet Clinic sample application.
+First clone the repo and build the sample app:
+
+```
+git clone https://github.com/spring-projects/spring-petclinic.git
+cd spring-petclinic
+./mvnw package
+```
+
+Then build the New Relic OpenTelemetry Integration, as described in the [Building](#building) section,
+or download it [from here](https://search.maven.org/remotecontent?filepath=com/newrelic/telemetry/newrelic-opentelemetry-javaagent/0.10.1/newrelic-opentelemetry-javaagent-0.10.1-all.jar).
+
+Then run the application with the java agent attached and your insights insert key:
+```
+java -javaagent:/path/to/newrelic-opentelemetry-javaagent-*-all.jar -Dnewrelic.api.key=<Insights Insert Key> -Dnewrelic.service.name=pet-clinic -jar target/*.jar
+```
+
+Once running click around http://localhost:8080 a bit and then go to [one.newrelic.com](https://one.newrelic.com). In the upper right click on the magnifying glass
+and search for `pet-clinic`. There should be an "Integration-reported service" named pet-clinic.
+Click on that and you should see data coming in!
+
 ## Support
 
 New Relic hosts and moderates an online forum where you can interact with New Relic employees as well as other customers to get help and share best practices. 
