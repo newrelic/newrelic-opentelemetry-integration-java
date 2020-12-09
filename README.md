@@ -14,7 +14,9 @@ The New Relic OpenTelemetry Integration is a standard Java agent. To use it, you
 -Dnewrelic.service.name=fun_service
 ```
 
-Here is an example to override the endpoints where metric and span are sent and to increase logging.
+Since the New Relic OpenTelemetry Integration is built using the [New Relic OpenTelemetry exporter](https://github.com/newrelic/opentelemetry-exporter-java)
+it uses the same system properties.
+Here is an example that overrides the endpoints where metric and span data are sent and increases the logging level.
 
 ```
 -javaagent:/path/to/newrelic-opentelemetry-javaagent-all.jar
@@ -48,15 +50,44 @@ For general querying information, see:
 - [Query New Relic data](https://docs.newrelic.com/docs/using-new-relic/data/understand-data/query-new-relic-data)
 - [Intro to NRQL](https://docs.newrelic.com/docs/query-data/nrql-new-relic-query-language/getting-started/introduction-nrql)
 
+## Published Artifacts
+|Group                 |Name                                 |Link                                                                                                   |Description     |
+|----------------------|-------------------------------------|-------------------------------------------------------------------------------------------------------|----------------|
+|com.newrelic.telemetry|newrelic-opentelemetry-javaagent     |[Maven](https://search.maven.org/artifact/com.newrelic.telemetry/newrelic-opentelemetry-javaagent)     | The java agent |
+
+
 ## Building
 
-Requires: JDK 11+
+**Requirements:** JDK 11+
+
+To build run the following command:
 
 `./gradlew assemble`
 
 ## Testing
 
 `smoke-tests` contains simple tests to verify that the resulting agent builds and applies correctly.
+
+To run the smoke tests run the following command:
+
+`./gradlew test`
+
+## Example
+
+To see the New Relic OpenTelemetry Integration in action we will be using the [Spring Pet Clinic sample application](https://github.com/newrelic-forks/spring-petclinic).
+
+First build the New Relic OpenTelemetry Integration, as described in the [Building](#Building) section,
+or download the jar file [from here](https://search.maven.org/remotecontent?filepath=com/newrelic/telemetry/newrelic-opentelemetry-javaagent/).
+
+Next, follow the steps in the [Running petclinic locally section](https://github.com/newrelic-forks/spring-petclinic#running-petclinic-locally)
+but when executing the jar, add the java agent, service name, and insights insert key like below:
+```
+java -javaagent:/path/to/newrelic-opentelemetry-javaagent-*-all.jar -Dnewrelic.api.key=<Insights Insert Key> -Dnewrelic.service.name=pet-clinic -jar target/*.jar
+```
+
+Once running click around http://localhost:8080 a bit and then go to [one.newrelic.com](https://one.newrelic.com). In the upper right click on the magnifying glass
+and search for `pet-clinic`. There should be an "Integration-reported service" named pet-clinic.
+Click on that and you should see data coming in!
 
 ## Support
 
