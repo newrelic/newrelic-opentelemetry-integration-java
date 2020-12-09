@@ -74,19 +74,13 @@ To run the smoke tests run the following command:
 
 ## Example
 
-To see the New Relic OpenTelemetry Integration in action we will be using the [Spring Pet Clinic sample application](https://github.com/spring-projects/spring-petclinic).
-First clone the repo and build the sample app:
+To see the New Relic OpenTelemetry Integration in action we will be using the [Spring Pet Clinic sample application](https://github.com/newrelic-forks/spring-petclinic).
 
-```
-git clone https://github.com/spring-projects/spring-petclinic.git
-cd spring-petclinic
-./mvnw package
-```
+First build the New Relic OpenTelemetry Integration, as described in the [Building](#Building) section,
+or download the jar file [from here](https://search.maven.org/remotecontent?filepath=com/newrelic/telemetry/newrelic-opentelemetry-javaagent/).
 
-Then build the New Relic OpenTelemetry Integration, as described in the [Building](#Building) section,
-or download it [from here](https://search.maven.org/remotecontent?filepath=com/newrelic/telemetry/newrelic-opentelemetry-javaagent/0.10.1/newrelic-opentelemetry-javaagent-0.10.1-all.jar).
-
-Then run the application with the java agent attached and your insights insert key:
+Next, follow the steps in the [Running petclinic locally section](https://github.com/newrelic-forks/spring-petclinic#running-petclinic-locally)
+but when executing the jar, add the java agent, service name, and insights insert key like below:
 ```
 java -javaagent:/path/to/newrelic-opentelemetry-javaagent-*-all.jar -Dnewrelic.api.key=<Insights Insert Key> -Dnewrelic.service.name=pet-clinic -jar target/*.jar
 ```
