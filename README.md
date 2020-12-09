@@ -16,7 +16,8 @@ The New Relic OpenTelemetry Integration is a standard Java agent. To use it, you
 
 Since the New Relic OpenTelemetry Integration is built using the [New Relic OpenTelemetry exporter](https://github.com/newrelic/opentelemetry-exporter-java)
 it uses the same system properties.
-Here is an example that overrides the endpoints where metric and span data are sent and increases the logging level.
+
+Here is an example that overrides the endpoints where metric and span data is sent (e.g. EU region instead of default US region) and increases the logging level.
 
 ```
 -javaagent:/path/to/newrelic-opentelemetry-javaagent-all.jar
@@ -24,8 +25,8 @@ Here is an example that overrides the endpoints where metric and span data are s
 -Dnewrelic.service.name=fun_service
 -Dio.opentelemetry.javaagent.slf4j.simpleLogger.log.com.newrelic.telemetry=debug
 -Dnewrelic.enable.audit.logging=true
--Dnewrelic.trace.uri.override=https://staging-trace-api.newrelic.com/trace/v1
--Dnewrelic.metric.uri.override=https://staging-metric-api.newrelic.com/metric/v1
+-Dnewrelic.trace.uri.override=https://trace-api.eu.newrelic.com/trace/v1
+-Dnewrelic.metric.uri.override=https://metric-api.eu.newrelic.com/metric/v1
 ```
 
 Here is the list and description of all configurable properties for the [New Relic OpenTelemetry exporter](https://github.com/newrelic/opentelemetry-exporter-java#configuration-system-properties).
