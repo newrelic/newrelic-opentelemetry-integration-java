@@ -10,8 +10,8 @@ subprojects {
 
     ext {
         versions = [
-                opentelemetryExportersNewRelic : "0.10.0",
-                opentelemetryJavaagent         : "0.10.1"
+                opentelemetryExportersNewRelic : "0.11.0",
+                opentelemetryJavaagent         : "0.11.0"
         ]
     }
 
