@@ -9,7 +9,7 @@ A custom distribution of the OpenTelemetry Java agent that uses the [New Relic O
 The New Relic OpenTelemetry Integration is a standard Java agent. To use it, you just need the `-javaagent` startup flag and the following system properties. 
 
 ```
--javaagent:/path/to/newrelic-opentelemetry-javaagent-all.jar
+-javaagent:/path/to/newrelic-opentelemetry-javaagent-*-all.jar
 -Dnewrelic.api.key=<Insights Insert Key>
 -Dnewrelic.service.name=fun_service
 ```
@@ -20,7 +20,7 @@ it uses the same system properties.
 Here is an example that overrides the endpoints where metric and span data is sent (e.g. EU region instead of default US region) and increases the logging level.
 
 ```
--javaagent:/path/to/newrelic-opentelemetry-javaagent-all.jar
+-javaagent:/path/to/newrelic-opentelemetry-javaagent-*-all.jar
 -Dnewrelic.api.key=<Insights Insert Key>
 -Dnewrelic.service.name=fun_service
 -Dio.opentelemetry.javaagent.slf4j.simpleLogger.log.com.newrelic.telemetry=debug
@@ -59,13 +59,18 @@ For general querying information, see:
 
 ## Building
 
-**Requirements:** JDK 11+
+**Requirements:**
+* JDK 8+
 
 To build run the following command:
 
 `./gradlew assemble`
 
 ## Testing
+
+**Requirements:**
+* JDK 8+
+* Docker
 
 `smoke-tests` contains simple tests to verify that the resulting agent builds and applies correctly.
 
