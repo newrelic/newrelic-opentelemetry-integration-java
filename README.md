@@ -2,40 +2,96 @@
 
 # New Relic OpenTelemetry Integration (Java agent)
 
-A custom distribution of the OpenTelemetry Java agent that uses the [New Relic OpenTelemetry exporter](https://github.com/newrelic/opentelemetry-exporter-java) by default to send telemetry data to the New Relic platform.
+This is a custom distribution of the OpenTelemetry Java agent that uses the [New Relic OpenTelemetry exporter](https://github.com/newrelic/opentelemetry-exporter-java) to send telemetry data to the New Relic platform.
 
-## Installing and using New Relic OpenTelemetry Integration
+## Prerequisites
 
-The New Relic OpenTelemetry Integration is a standard Java agent. To use it, you just need the `-javaagent` startup flag and the following system properties. 
+First things first:
+
+* If we don’t already know you, sign up for a [New Relic account](https://docs.newrelic.com/docs/accounts/accounts-billing/account-setup/create-your-new-relic-account).
+* Make sure you have an [Insights insert key](https://docs.newrelic.com/docs/telemetry-data-platform/ingest-manage-data/ingest-apis/use-event-api-report-custom-events#) to send spans and metrics to New Relic.
+
+## Get the software
+
+You can either grab the published artifacts or you can build it yourself.
+
+### Published Artifacts
+|Group                 |Name                                 |Link                                                                                                   |Description     |
+|----------------------|-------------------------------------|-------------------------------------------------------------------------------------------------------|----------------|
+|com.newrelic.telemetry|newrelic-opentelemetry-javaagent     |[Maven](https://search.maven.org/artifact/com.newrelic.telemetry/newrelic-opentelemetry-javaagent)     | The java agent |
+
+
+### Build
+
+To build the integration, make sure you have JDK 8+, and then run the following command:
+
+`./gradlew assemble`
+
+## Startup
+
+The New Relic OpenTelemetry Integration is a standard Java agent. To use it, you just need the `-javaagent` startup flag and these minimum system properties: 
 
 ```
 -javaagent:/path/to/newrelic-opentelemetry-javaagent-*-all.jar
--Dnewrelic.api.key=<Insights Insert Key>
--Dnewrelic.service.name=fun_service
+-Dnewrelic.api.key=YOUR_INSIGHTS_INSERT_KEY
+-Dnewrelic.service.name=INSERT_A_DESCRIPTIVE_NAME
 ```
 
-Since the New Relic OpenTelemetry Integration is built using the [New Relic OpenTelemetry exporter](https://github.com/newrelic/opentelemetry-exporter-java)
-it uses the same system properties.
+Since the New Relic OpenTelemetry Integration is built using the New Relic OpenTelemetry exporter, it uses the same system properties. For a list and description of all configurable properties, see [New Relic OpenTelemetry exporter](https://github.com/newrelic/opentelemetry-exporter-java#configuration-system-properties).
 
-Here is an example that overrides the endpoints where metric and span data is sent (e.g. EU region instead of default US region) and increases the logging level.
+Here's an example of common startup properties:
 
 ```
 -javaagent:/path/to/newrelic-opentelemetry-javaagent-*-all.jar
--Dnewrelic.api.key=<Insights Insert Key>
--Dnewrelic.service.name=fun_service
+-Dnewrelic.api.key=YOUR_INSIGHTS_INSERT_KEY
+-Dnewrelic.service.name=INSERT_A_DESCRIPTIVE_NAME
+-Dio.opentelemetry.javaagent.slf4j.simpleLogger.log.com.newrelic.telemetry=debug
+-Dnewrelic.enable.audit.logging=true
+-Dnewrelic.trace.uri.override=SEE_THE_SECTION_BELOW_ABOUT_CHANGING_ENDPOINTS
+-Dnewrelic.metric.uri.override=SEE_THE_SECTION_BELOW_ABOUT_CHANGING_ENDPOINTS
+```
+
+## Change endpoints
+
+If you don't supply endpoints, the integration defaults to the following:
+
+* Traces: https://trace-api.newrelic.com/trace/v1
+* Metrics: https://metric-api.newrelic.com/metric/v1
+
+You can override the default endpoints for this integration, for example, when switching to the EU region or setting up [Infinite Tracing](https://docs.newrelic.com/docs/understand-dependencies/distributed-tracing/infinite-tracing/introduction-infinite-tracing).
+
+### EU endpoints
+
+Here is an example that overrides the default US endpoints and sends metric and span data to the EU region. 
+
+```
+-javaagent:/path/to/newrelic-opentelemetry-javaagent-*-all.jar
+-Dnewrelic.api.key=YOUR_INSIGHTS_INSERT_KEY
+-Dnewrelic.service.name=INSERT_A_DESCRIPTIVE_NAME
 -Dio.opentelemetry.javaagent.slf4j.simpleLogger.log.com.newrelic.telemetry=debug
 -Dnewrelic.enable.audit.logging=true
 -Dnewrelic.trace.uri.override=https://trace-api.eu.newrelic.com/trace/v1
 -Dnewrelic.metric.uri.override=https://metric-api.eu.newrelic.com/metric/v1
 ```
+### Infinite Tracing
 
-Here is the list and description of all configurable properties for the [New Relic OpenTelemetry exporter](https://github.com/newrelic/opentelemetry-exporter-java#configuration-system-properties).
+If you are setting up Infinite Tracing, you need to override the default trace endpoint and send telemetry data to the New Relic trace observer:
 
-## Find and use your data
+1. Follow the steps in [Set up the trace observer](https://docs.newrelic.com/docs/understand-dependencies/distributed-tracing/infinite-tracing/set-trace-observer) to get the value for YOUR_TRACE_OBSERVER_URL.
+2. Pass the value of YOUR_TRACE_OBSERVER_URL as an override parameter to start sending telemetry data to the trace observer:
+```
+-javaagent:/path/to/newrelic-opentelemetry-javaagent-*-all.jar
+-Dnewrelic.api.key=INSERT_YOUR_INSIGHTS_INSERT_KEY
+-Dnewrelic.service.name=INSERT_A_DESCRIPTIVE_NAME
+-Dio.opentelemetry.javaagent.slf4j.simpleLogger.log.com.newrelic.telemetry=debug
+-Dnewrelic.enable.audit.logging=true
+-Dnewrelic.trace.uri.override=YOUR_TRACE_OBSERVER_URL
+```
+3. Since you want New Relic to analyze all your traces, set OpenTelmetry to use the `AlwaysOn` sampler.
 
-Go to [one.newrelic.com](https://one.newrelic.com), search for your service name, and :star2: 
+## Find and use your data in New Relic
 
-If you don't see your service, try running with debug and audit logging to confirm telemetry batches are being successfully sent. Here is an example of what you might see: 
+Go to [one.newrelic.com](https://one.newrelic.com), search for your service name. If you don't see your service, try running with debug and audit logging to confirm telemetry batches are being successfully sent. Here is an example of what you might see: 
 
 ```
 [Thread-6] DEBUG com.newrelic.telemetry.spans.SpanBatchSender - Sending a span batch (number of spans: 4) to the New Relic span ingest endpoint)
@@ -51,24 +107,10 @@ For general querying information, see:
 - [Query New Relic data](https://docs.newrelic.com/docs/using-new-relic/data/understand-data/query-new-relic-data)
 - [Intro to NRQL](https://docs.newrelic.com/docs/query-data/nrql-new-relic-query-language/getting-started/introduction-nrql)
 
-## Published Artifacts
-|Group                 |Name                                 |Link                                                                                                   |Description     |
-|----------------------|-------------------------------------|-------------------------------------------------------------------------------------------------------|----------------|
-|com.newrelic.telemetry|newrelic-opentelemetry-javaagent     |[Maven](https://search.maven.org/artifact/com.newrelic.telemetry/newrelic-opentelemetry-javaagent)     | The java agent |
-
-
-## Building
-
-**Requirements:**
-* JDK 8+
-
-To build run the following command:
-
-`./gradlew assemble`
-
 ## Testing
 
-**Requirements:**
+Here are the testing requirements:
+
 * JDK 8+
 * Docker
 
@@ -80,20 +122,21 @@ To run the smoke tests run the following command:
 
 ## Example
 
-To see the New Relic OpenTelemetry Integration in action we will be using the [Spring Pet Clinic sample application](https://github.com/newrelic-forks/spring-petclinic).
+To see the New Relic OpenTelemetry Integration in action, check out the [Spring Pet Clinic sample application](https://github.com/newrelic-forks/spring-petclinic).
 
-First build the New Relic OpenTelemetry Integration, as described in the [Building](#Building) section,
+To set up the Pet Clinic with OpenTelemetry:
+
+1. Build the New Relic OpenTelemetry Integration, as described in the [Building](#Build) section,
 or download the jar file [from here](https://search.maven.org/remotecontent?filepath=com/newrelic/telemetry/newrelic-opentelemetry-javaagent/).
-
-Next, follow the steps in the [Running petclinic locally section](https://github.com/newrelic-forks/spring-petclinic#running-petclinic-locally)
-but when executing the jar, add the java agent, service name, and insights insert key like below:
+2. Follow the steps in the [Running petclinic locally section](https://github.com/newrelic-forks/spring-petclinic#running-petclinic-locally), 
+but when executing the jar, add the Java agent, service name, and Insights insert key as follows:
 ```
-java -javaagent:/path/to/newrelic-opentelemetry-javaagent-*-all.jar -Dnewrelic.api.key=<Insights Insert Key> -Dnewrelic.service.name=pet-clinic -jar target/*.jar
+java -javaagent:/path/to/newrelic-opentelemetry-javaagent-*-all.jar -Dnewrelic.api.key=YOUR_INSIGHTS_INSERT_KEY -Dnewrelic.service.name=pet-clinic -jar target/*.jar
 ```
-
-Once running click around http://localhost:8080 a bit and then go to [one.newrelic.com](https://one.newrelic.com). In the upper right click on the magnifying glass
-and search for `pet-clinic`. There should be an "Integration-reported service" named pet-clinic.
-Click on that and you should see data coming in!
+3. Once it is running, click around a bit in the app at http://localhost:8080.
+4. Go to [one.newrelic.com](https://one.newrelic.com).
+5. In the upper right, click on the magnifying glass, and search for `pet-clinic`.  
+6. Click on the `pet-clinic` link to see data coming in!
 
 ## Support
 
