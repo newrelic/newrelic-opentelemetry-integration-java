@@ -60,34 +60,7 @@ If you don't supply endpoints, the integration defaults to the following:
 
 You can override the default endpoints for this integration, for example, when switching to the EU region or setting up [Infinite Tracing](https://docs.newrelic.com/docs/understand-dependencies/distributed-tracing/infinite-tracing/introduction-infinite-tracing).
 
-### EU endpoints
-
-Here is an example that overrides the default US endpoints and sends metric and span data to the EU region. 
-
-```
--javaagent:/path/to/newrelic-opentelemetry-javaagent-*-all.jar
--Dnewrelic.api.key=YOUR_INSIGHTS_INSERT_KEY
--Dnewrelic.service.name=INSERT_A_DESCRIPTIVE_NAME
--Dio.opentelemetry.javaagent.slf4j.simpleLogger.log.com.newrelic.telemetry=debug
--Dnewrelic.enable.audit.logging=true
--Dnewrelic.trace.uri.override=https://trace-api.eu.newrelic.com/trace/v1
--Dnewrelic.metric.uri.override=https://metric-api.eu.newrelic.com/metric/v1
-```
-### Infinite Tracing
-
-If you are setting up Infinite Tracing, you need to override the default trace endpoint and send telemetry data to the New Relic trace observer:
-
-1. Follow the steps in [Set up the trace observer](https://docs.newrelic.com/docs/understand-dependencies/distributed-tracing/infinite-tracing/set-trace-observer) to get the value for YOUR_TRACE_OBSERVER_URL.
-2. Pass the value of YOUR_TRACE_OBSERVER_URL as an override parameter to start sending telemetry data to the trace observer:
-```
--javaagent:/path/to/newrelic-opentelemetry-javaagent-*-all.jar
--Dnewrelic.api.key=INSERT_YOUR_INSIGHTS_INSERT_KEY
--Dnewrelic.service.name=INSERT_A_DESCRIPTIVE_NAME
--Dio.opentelemetry.javaagent.slf4j.simpleLogger.log.com.newrelic.telemetry=debug
--Dnewrelic.enable.audit.logging=true
--Dnewrelic.trace.uri.override=YOUR_TRACE_OBSERVER_URL
-```
-3. Since you want New Relic to analyze all your traces, set OpenTelmetry to use the `AlwaysOn` sampler.
+For details about using EU or Infinite Tracing URLs, see [OpenTelemetry: Advanced configuration](https://docs.newrelic.com/docs/integrations/open-source-telemetry-integrations/opentelemetry/opentelemetry-advanced-configuration).
 
 ## Find and use your data in New Relic
 
